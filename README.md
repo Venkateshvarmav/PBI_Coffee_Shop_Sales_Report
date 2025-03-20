@@ -28,9 +28,10 @@ This dashboard helps the coffee shop understand their customers better. It helps
 - Step 12 : For creating new columns following DAX expressions were written;
 
 * to extract hour from the transaction time-
-  ```DAX
+```DAX
 HOUR = HOUR(Transactions[transaction_time])
 ```
+
 * to identify the sales amount
 ```DAX
 Sales = Transactions[unit_price]*Transactions[transaction_qty]
@@ -46,10 +47,12 @@ var selected_month = SELECTEDVALUE('Date Table'[Month])
 return 
 TOTALMTD(CALCULATE([Total Orders],'Date Table'[Month]=selected_month),'Date Table'[Date])
 ```
+
 ```DAX
 Previous Month Orders = 
 CALCULATE([Current Month Orders],DATEADD('Date Table'[Date],-1,MONTH))
 ```
+
 **Similar measure were written for Total Sales and Total Quantity replacing the associated column names.**
 
 A New card visual was used to represent the above measures
@@ -65,6 +68,7 @@ Daily avg sales = AVERAGEX(ALLSELECTED(Transactions[transaction_date]),[Total Sa
 ```DAX
 Label for product category = SELECTEDVALUE(Transactions[product_category]) & " | " & FORMAT([Total Sales]/1000,"$0.00K")
 ```
+
 **Similar DAX were written for product type and store location by replacing the column names.**
   
  - Step 17 : New measure was created to calculate for Month on month difference with respect to growth and difference of orders
