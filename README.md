@@ -3,9 +3,11 @@
 
 # Coffee Shop Sales
 
+Dashboard Link - https://app.powerbi.com/groups/me/reports/2fb98590-42f4-4b51-be44-6c55404ed16f/b6e7faa788c2079b6b27?experience=power-bi&clientSideAuth=0
+
 ## Problem Statement
 
-This dashboard helps the coffee shop understand their customers better. It helps the coffee know their customers preference. Through different parameters, they get to know their best and worst product in each store location and their busiest day to assign more employees that day & thus they can improve their services. It also lets them know the sales trend and revenue generated each month and comparing them with previous month.
+This dashboard helps the coffee shop understand their customers better. It helps the coffee know their customer's preference and behaviour. Through different parameters, they get to know their best and worst product in each store location and their busiest day and time to assign more employees & thus they can improve their services. It also lets them know the sales trend and revenue generated each month/day and comparing them with previous month/day.
 
 
 ### Steps followed 
@@ -16,23 +18,25 @@ This dashboard helps the coffee shop understand their customers better. It helps
 - Step 4 : It was observed that in none of the columns errors & empty values were present
 - Step 5 : Since the data contains various products and categories, thus in order to represent sales, a new visual was added using the bar graph in the visualizations pane in report view. 
 - Step 6 : Visual filters (Slicers) were added for the month field.
-- Step 7 : Metrics table was used as a heat map to show the most and least sales for that particular month
+- Step 7 : Metrics table was used as a heat map to show the most and least sales for that particular calendar month
 - Step 8 : Bar chart were used to show sales by store location,product category, top 10 product type, sales by hour of the day and sales trend over the preiod.
 - Step 9 : Tool Tips are used to show the sales, quanitity sold and total orders using cards and donut charts
 - Step 10 : Line graph is used for Spark lines show the trend(sales, qty sold, orders) for the month
-- Step 11 : Donut chart is used for showing the sales in weekday against weekend
+- Step 11 : Donut chart is used for showing the sales on weekday against weekend
 
 
-for creating new columns following DAX expressions were written;
+- Step 12 : For creating new columns following DAX expressions were written;
 
 * to extract hour from the transaction time-
+  ```DAX
 HOUR = HOUR(Transactions[transaction_time])
-
+```
 * to identify the sales amount
-  Sales = Transactions[unit_price]*Transactions[transaction_qty]
-
+```DAX
+Sales = Transactions[unit_price]*Transactions[transaction_qty]
+```
         
-- Step 15 : New measure was created to find total the current month sales and previous month sales.`
+- Step 13 : New measure was created to find total the current month orders and previous month orders.`
 
 Following DAX expression was written for the same,
 
@@ -42,134 +46,120 @@ var selected_month = SELECTEDVALUE('Date Table'[Month])
 return 
 TOTALMTD(CALCULATE([Total Orders],'Date Table'[Month]=selected_month),'Date Table'[Date])
 ```
-
+```DAX
 Previous Month Orders = 
 CALCULATE([Current Month Orders],DATEADD('Date Table'[Date],-1,MONTH))
-        
-A card visual was used to represent count of customers.
+```
+**Similar measure were written for Total Sales and Total Quantity replacing the associated column names.**
+
+A New card visual was used to represent the above measures
 
 
-        
- - Step 16 : New measure was created to find  % of customers,
+- Step 14 : New measure was created to find Daily avg sales using
+```DAX
+Daily avg sales = AVERAGEX(ALLSELECTED(Transactions[transaction_date]),[Total Sales])
+```
  
- Following DAX expression was written to find % of customers,
+ - Step 15 : Following DAX expression was written for label for product category, product type and store location
  
-         % Customers = (DIVIDE(airline_passenger_satisfaction[Count of Customers], 129880)*100)
+```DAX
+Label for product category = SELECTEDVALUE(Transactions[product_category]) & " | " & FORMAT([Total Sales]/1000,"$0.00K")
+```
+**Similar DAX were written for product type and store location by replacing the column names.**
+  
+ - Step 17 : New measure was created to calculate for Month on month difference with respect to growth and difference of orders
  
- A card visual was used to represent this perecntage.
- 
- Snap of % of customers who preferred business class
- 
- ![Snap_Percentage](https://user-images.githubusercontent.com/102996550/174090653-da02feb4-4775-4a95-affb-a211ca985d07.jpg)
+```DAX
+MoM Growth & Difference of Orders = 
+VAR monthdiff = [Current Month Orders]-[Previous Month Orders]
+var MoM = monthdiff/[Previous Month Orders]
+var _sign = IF(monthdiff>0,"+","")
+var sign_trend = IF(monthdiff>0,"▲","▼")
+return 
+IF(SELECTEDVALUE('Date Table'[Month Year]) = "Jan 2023","No value",
+sign_trend & " " & _sign & FORMAT(MoM,"#0.0%" & " " & "|" &" " & _sign & FORMAT(monthdiff/1000,"0.0K")) & " " & "vs LM")
+```
 
- 
- - Step 17 : New measure was created to calculate total distance travelled by flights & a card visual was used to represent total distance.
- 
- Following DAX expression was written to find total distance,
- 
-         Total Distance Travelled = SUM(airline_passenger_satisfaction[Flight Distance])
-    
- A card visual was used to represent this total distance.
+ **Similar measures written for Total Sales and Total Quantity by replacing the column names**
  
  
- ![Snap_3](https://user-images.githubusercontent.com/102996550/174091618-bf770d6c-34c6-44d4-9f5e-49583a6d5f68.jpg)
- 
- - Step 18 : The report was then published to Power BI Service.
- 
- 
-![Publish_Message](https://user-images.githubusercontent.com/102996550/174094520-3a845196-97e6-4d44-8760-34a64abc3e77.jpg)
-
 # Snapshot of Dashboard (Power BI Service)
 
-![dashboard_snapo](https://user-images.githubusercontent.com/102996550/174096257-11f1aae5-203d-44fc-bfca-25d37faf3237.jpg)
+![image](https://github.com/user-attachments/assets/091854af-c40e-4fca-8983-8e68bba60d71)
 
  
  # Report Snapshot (Power BI DESKTOP)
 
- 
-![Dashboard_upload](https://user-images.githubusercontent.com/102996550/174074051-4f08287a-0568-4fdf-8ac9-6762e0d8fa94.jpg)
+  ![image](https://github.com/user-attachments/assets/35c15ea9-f825-4554-8577-1fce908b8e9c)
+
 
 # Insights
 
-A single page report was created on Power BI Desktop & it was then published to Power BI Service.
+A single page report was created on Power BI Desktop with 2 tooltips & it was then published to Power BI Service.
 
 Following inferences can be drawn from the dashboard;
 
-### [1] Total Number of Customers = 129880
+### [1] Total Sales for the month of May 
 
-   Number of satisfied Customers (Male) = 28159 (21.68 %)
+   Total Sales for May - $157K
+   
+   Total Sales went up by 31.8% in the month of May when compared to April - $37.8K
 
-   Number of satisfied Customers (Female) = 28269 (21.76 %)
+### [2] Total Orders for the month of May 
 
-   Number of neutral/unsatisfied customers (Male) = 35822 (27.58 %)
+   Total Orders for May - 33527
+   
+   Total Orders went up by 32.3% in the month of May when compared to April - 8.2K
+   
+### [3] Total Sales for the month of May 
 
-   Number of neutral/unsatisfied customers (Female) = 37630 (28.97 %)
+   Total Quantity for May - 48233
+   
+   Total Quantity went up by 32.3% in the month of May when compared to April - 11.8K
 
-
-           thus, higher number of customers are neutral/unsatisfied.
            
-### [2] Average Ratings
+###  [4] Sales Compared to Weekends by Weekdays
 
-    a) Baggage Handling - 3.63/5
-    b) Check-in Service - 3.31/5
-    c) Cleanliness - 3.29/5
-    d) Ease of online booking - 2.88/5
-    e) Food & Drink - 3.21/5
-    f) In-flight Entertainment - 3.36/5
-    g) In-flight service - 3.64/5
-    h) In-flight Wifi service - 2.81/5
-    i) Leg room service - 3.37/5
-    j) On-board service - 3.38/5
-    k) Online boarding - 3.33/5
-    l) Seat comfort - 3.44/5
-    m) Departure & arrival convenience - 3.22/5
+Sales in Weekdays contributes to 74.41% with weekends contributing 25.59%
   
-  while calculating average rating, null values have been ignored as they were not relevant for some customers. 
   
-  These ratings will change if different visual filters will be applied.  
+### [5] Top performing Store Locations in May
   
-  ### [3] Average Delay 
-  
-      a) Average delay in arrival(minutes) - 15.09
-      b) Average delay in departure(minutes) - 14.71
-Average delay will change if different visual filters will be applied.
+Hell's Kitchen - $56.96K
+Astoria - $55.08K
+Lower Manhattan - $54.45K
 
- ### [4] Some other insights
- 
- ### Class
- 
- 1.1) 47.87 % customers travelled by Business class.
- 
- 1.2) 44.89 % customers travelled by Economy class.
- 
- 1.3) 7.25 % customers travelled by Economy plus class.
- 
-         thus, maximum customers travelled by Business class.
- 
- ### Age Group
- 
- 2.1)  21.69 % customers belong to '0-25' age group.
- 
- 2.2)  52.44 % customers belong to '25-50' age group.
- 
- 2.3)  25.57 % customers belong to '50-75' age group.
- 
- 2.4)  0.31 % customers belong to '75-100' age group.
- 
-         thus, maximum customers belong to '25-50' age group.
-         
-### Customer Type
+### [6] Some other insights
 
-3.1) 18.31 % customers have customer type 'First time'.
+**Top 3 performing product sales by category**
 
-3.2) 81.69 % customers have customer type 'returning'.
-       
-       thus, more customers have customer type 'returning'.
+Coffee -$64.9K
+Tea - $46.24K
+Bakery - 19.25K
 
-### Type of travel
+**Bottom 3 performing product sales by category**
 
-4.1) 69.06 % customers have travel type 'Business'.
+Loose tea - $2.77K
+Flavours - $2.0K
+Packaged Choc0late - $0.99K
 
-4.2) 30.94 % customers have travel type 'Personal'.
+**Top 3 performing product Type by category**
 
-        thus, more customers have travel type 'Business'.
+Barista Espresso - $21.66K
+Brewed Chai Tea - $18.19
+Gourmet brewed Coffee - $17.14K
+
+**Bottom 3 performing product sales by category**
+
+Organic brewed Coffee - $8.78K
+Scone - $8.55K
+Drip Coffee - $7.77K
+
+### Staff Assignment
+
+From the heat map it can be noticed that 
+* Friday,Thursday and Wednesday between 7 AM to 11 AM is the busiest at **Hell's Kitchen**
+* Friday,Thursday, Saturday and Monday between 7 AM to 10 AM is the busiest at **Astoria**
+* Friday,Thursday, Tuesday between 7 AM to 10 AM is the busiest at **Lower Manhattan**
+
+ With this data the store manager can allocate more employee between that time for faster service
