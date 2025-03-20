@@ -71,7 +71,7 @@ Label for product category = SELECTEDVALUE(Transactions[product_category]) & " |
 
 **Similar DAX were written for product type and store location by replacing the column names.**
   
- - Step 17 : New measure was created to calculate for Month on month difference with respect to growth and difference of orders
+ - Step 16 : New measure was created to calculate for Month on month difference with respect to growth and difference of orders
  
 ```DAX
 MoM Growth & Difference of Orders = 
@@ -167,3 +167,16 @@ From the heat map it can be noticed that
 * Friday,Thursday, Tuesday between 7 AM to 10 AM is the busiest at **Lower Manhattan**
 
  With this data the store manager can allocate more employee between that time for faster service
+
+
+ ## Analysis
+
+1. With the above dashboard we can determine the best and worst selling products at each store location on each day of the week at specified time. using this Employee allocation can be done easily by shifting people from non rush hours to rush hour time slot or hiring part time employee to make the line move faster and thus catering to more customers.
+ 
+2. We can also determine the worst selling products and the leadership can decide wheather the product need to be completely removed or make it a once a week speacial based on the total revenue generated from the product.
+
+3. We can device a stratergy to promote the mid level selling products by either reducing the price or including that product as a combo with other low/mid selling products to increase more sales
+
+## Author - Venkatesh Varma V
+
+This project is part of my portfolio, showcasing my Power BI skills essential for Data Analyst roles.
