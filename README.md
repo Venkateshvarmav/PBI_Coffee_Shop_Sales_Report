@@ -27,7 +27,7 @@ This dashboard helps the coffee shop understand their customers better. It helps
 
 - Step 12 : For creating new columns following DAX expressions were written;
 
--* to extract hour from the transaction time-
+to extract hour from the transaction time-
 ```DAX
 HOUR = HOUR(Transactions[transaction_time])
 ```
