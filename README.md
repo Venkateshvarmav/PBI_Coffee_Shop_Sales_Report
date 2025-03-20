@@ -94,7 +94,8 @@ sign_trend & " " & _sign & FORMAT(MoM,"#0.0%" & " " & "|" &" " & _sign & FORMAT(
  
  # Report Snapshot (Power BI DESKTOP)
 
-  ![image](https://github.com/user-attachments/assets/35c15ea9-f825-4554-8577-1fce908b8e9c)
+![image](https://github.com/user-attachments/assets/b3456a29-5d8a-4090-bf5f-398a274d0fa5)
+
 
 
 # Insights
